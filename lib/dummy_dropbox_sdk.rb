@@ -152,6 +152,17 @@ class DropboxClient
     return metadata
   end
 
+  def media(path)
+    {"expires"=>"Fri, 27 Jul 2012 15:04:16 +0000", "url"=> path}
+  end
+
+  def thumbnail(path)
+    dummy_file_path = File.join(DummyDropbox::root_path, path)
+    raise DropboxError.new("File not found") unless File.exists?(dummy_file_path)
+
+    File.read(dummy_file_path)
+  end
+
   # TODO these methods I don't used yet. They are commented out because they
   #      have to be checked against the api if the signature match
 
