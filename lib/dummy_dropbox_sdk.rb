@@ -153,6 +153,10 @@ class DropboxClient
   end
 
   def media(path)
+
+    unless File.exists?(File.join(DummyDropbox::root_path, path))
+      raise DropboxError.new("Path '#{path}' not found")
+    end
     {"expires"=>"Fri, 27 Jul 2012 15:04:16 +0000", "url"=> path}
   end
 
