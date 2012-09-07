@@ -154,6 +154,15 @@ class DropboxClient
     return metadata
   end
 
+  def file_move(from_path, to_path)
+    dummy_from_path = File.join(DummyDropbox::root_path, from_path)
+    dummy_to_path = File.join(DummyDropbox::root_path, to_path)
+    raise DropboxError.new("path '#{from_path}' not found") unless File.exists?(dummy_from_path)
+    raise DropboxError.new("at path 'A file with the name '#{to_path}' already exists") if File.exists?(dummy_to_path)
+    File.mv(dummy_from_path, dummy_to_path)
+    self.metadata(to_path)
+  end
+
   def media(path)
 
     unless File.exists?(File.join(DummyDropbox::root_path, path))
