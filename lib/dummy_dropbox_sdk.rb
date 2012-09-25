@@ -88,6 +88,7 @@ class DropboxClient
     list_hash_files = []
     if File.directory?(dummy_path)
       Dir.entries(dummy_path).each do |file_name|
+        next if [".", ".."].include?(file_name)
         file_path = File.join(dummy_path, file_name)
         unless File.directory?(file_path)
           list_hash_files << {"size" => readable_file_size(File.size(file_path), 2),
@@ -95,6 +96,12 @@ class DropboxClient
                               "is_dir" => false,
                               "modified" => File.mtime(file_path),
                               "mime_type" => MIME::Types.type_for(file_path)[0].content_type,
+                              "path" => File.join(path, file_name)}
+        else
+          list_hash_files << {"size" => "0 bytes",
+                              "bytes" => 0,
+                              "is_dir" => true,
+                              "modified" => File.mtime(file_path),
                               "path" => File.join(path, file_name)}
         end
       end
