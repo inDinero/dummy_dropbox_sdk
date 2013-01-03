@@ -166,6 +166,7 @@ class DropboxClient
     dummy_to_path = File.join(DummyDropbox::root_path, to_path)
     raise DropboxError.new("path '#{from_path}' not found") unless File.exists?(dummy_from_path)
     raise DropboxError.new("at path 'A file with the name '#{to_path}' already exists") if File.exists?(dummy_to_path)
+    FileUtils.mkdir_p(dummy_to_path.sub(File.basename(dummy_to_path), ""))
     File.mv(dummy_from_path, dummy_to_path)
     self.metadata(to_path)
   end
