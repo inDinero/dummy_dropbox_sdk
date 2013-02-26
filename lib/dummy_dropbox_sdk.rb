@@ -81,6 +81,35 @@ class DropboxClient
     return self.metadata(path)
   end
 
+  def search(path, query, file_limit=1000, include_deleted=false)
+    dummy_path = File.join(DummyDropbox::root_path, path)
+
+    return [] unless File.exists?(dummy_path) && File.directory?(dummy_path)
+
+    results = []
+
+    Dir[File.join(dummy_path, "*#{query}*")].each do |file_path|
+      # file_path = File.join(dummy_path, File.basename(entry))
+      file_name = File.basename(file_path)
+      unless File.directory?(file_path)
+        results << {"size" => readable_file_size(File.size(file_path), 2),
+                    "bytes" => File.size(file_path),
+                    "is_dir" => false,
+                    "modified" => File.mtime(file_path),
+                    "mime_type" => MIME::Types.type_for(file_path)[0].content_type,
+                    "path" => File.join(path, file_name)}
+      else
+        results << {"size" => "0 bytes",
+                    "bytes" => 0,
+                    "is_dir" => true,
+                    "modified" => File.mtime(file_path),
+                    "path" => File.join(path, file_name)}
+      end
+    end
+
+    results
+  end
+
   def metadata(path, options={})
     dummy_path = File.join(DummyDropbox::root_path, path)
     raise DropboxError.new("File not found") unless File.exists?(dummy_path)
@@ -150,6 +179,7 @@ class DropboxClient
 
     File.read(dummy_file_path)
   end
+
 
   def file_delete(path)
     dummy_file_path = File.join(DummyDropbox::root_path, path)
