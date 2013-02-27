@@ -72,7 +72,7 @@ class DropboxClient
   def file_create_folder(path, options={})
     file_path = File.join(DummyDropbox::root_path, path)
     raise DropboxError.new("Folder exists!") if File.exists?(file_path)
-    FileUtils.mkdir(file_path)
+    FileUtils.mkdir_p(file_path)
     # intercepted result:
     # {"modified"=>"Wed, 23 Nov 2011 10:24:37 +0000", "bytes"=>0, "size"=>"0
     # bytes", "is_dir"=>true, "rev"=>"2f04dc6147", "icon"=>"folder",
