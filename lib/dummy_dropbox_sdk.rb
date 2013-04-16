@@ -14,7 +14,8 @@ KILO_SIZE = 1024.0
 # Return the file size with a readable style.
 def readable_file_size(size, precision)
   case
-  when size == 1 : "1 Byte"
+  when size == 1 
+    "1 Byte"
   when size < KILO_SIZE 
     "%d Bytes" % size
   when size < MEGA_SIZE 
