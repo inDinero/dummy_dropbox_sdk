@@ -22,7 +22,7 @@ def readable_file_size(size, precision)
     "%.#{precision}f KB" % (size / KILO_SIZE)
   when size < GIGA_SIZE
     "%.#{precision}f MB" % (size / MEGA_SIZE)
-  else 
+  else
     "%.#{precision}f GB" % (size / GIGA_SIZE)
   end
 end
@@ -163,9 +163,8 @@ class DropboxClient
     file_path = File.join(DummyDropbox::root_path, to_path)
     dir_path = File.dirname(file_path)
     FileUtils.mkdir_p(dir_path)
-    # FileUtils.copy_file(file_obj.path, File.join(DummyDropbox::root_path, to_path))
     File.open(file_path, "wb") do |f|
-      f.write(file_obj)
+      f.write(file_obj.read)
     end
 
     return self.metadata(to_path)
