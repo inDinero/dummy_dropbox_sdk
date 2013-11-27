@@ -164,7 +164,11 @@ class DropboxClient
     dir_path = File.dirname(file_path)
     FileUtils.mkdir_p(dir_path)
     File.open(file_path, "wb") do |f|
-      f.write(file_obj.read)
+      if file_obj.is_a?(File)
+        f.write(file_obj.read)
+      else
+        f.write(file_obj)
+      end
     end
 
     return self.metadata(to_path)
